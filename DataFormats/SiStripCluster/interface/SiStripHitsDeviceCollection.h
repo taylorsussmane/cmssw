@@ -15,6 +15,6 @@
 
 template <typename TDev>
 //	using SiStripHitsMaskingDevice = PortableCollection<TDev, SiStripHitsMaskingSoA>;
-using SiStripHitsMaskingDevice = PortableDeviceCollection<TDev, SiStripHitsMaskingLayout>;
+using SiStripHitsMaskingDevice = PortableDeviceCollection<TDev, SiStripHitsMaskingSoA>;
 
 #endif
