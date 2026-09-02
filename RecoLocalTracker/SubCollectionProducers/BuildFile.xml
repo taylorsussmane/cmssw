@@ -16,4 +16,5 @@
 <use name="RecoLocalTracker/SiStripClusterizer"/>
 <use name="RecoLocalTracker/ClusterParameterEstimator"/>
 <use name="RecoLocalTracker/Records"/>
+<use name="alpaka"/>
 <flags EDM_PLUGIN="1"/>

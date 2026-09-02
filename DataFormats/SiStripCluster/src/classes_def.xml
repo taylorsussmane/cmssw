@@ -1,5 +1,11 @@
 <lcgdict>
 
+<class name="SiStripHitsMaskingSoA"/>
+<class name="SiStripHitsMaskingSoA::View"/>
+<class name="SiStripHitsMaskingSoA::ConstView"/>
+<class name="SiStripHitsMaskingHost"/>
+<class name="edm::Wrapper<SiStripHitsMaskingHost>" splitLevel="0"/>
+
  <class name="SiStripCluster" ClassVersion="14">
   <version ClassVersion="14" checksum="1374720584"/>
   <version ClassVersion="13" checksum="1374720584"/>

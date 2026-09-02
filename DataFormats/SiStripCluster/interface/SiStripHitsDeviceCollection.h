@@ -1,0 +1,20 @@
+#ifndef DataFormats_SiStripCluster_interface_alpaka_SiStripHitsDeviceCollection_h
+#define DataFormats_SiStripCluster_interface_alpaka_SiStripHitsDeviceCollection_h
+
+#include <alpaka/alpaka.hpp>
+#include <cstdint>
+
+#include "DataFormats/Common/interface/Uninitialized.h"
+#include "DataFormats/Portable/interface/PortableDeviceCollection.h"
+//#include "DataFormats/Portable/interface/alpaka/PortableCollection.h"
+#include "DataFormats/PortableTestObjects/interface/TestSoA.h"
+#include "HeterogeneousCore/AlpakaInterface/interface/config.h"
+//#include "DataFormats/Portable/interface/alpaka/PortableCollection.h"
+
+#include "DataFormats/SiStripCluster/interface/SiStripHitsSoA.h"
+
+template <typename TDev>
+//	using SiStripHitsMaskingDevice = PortableCollection<TDev, SiStripHitsMaskingSoA>;
+using SiStripHitsMaskingDevice = PortableDeviceCollection<TDev, SiStripHitsMaskingLayout>;
+
+#endif

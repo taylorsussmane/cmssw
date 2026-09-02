@@ -1,0 +1,37 @@
+<use name="CommonTools/CandAlgos"/>
+<use name="CommonTools/ParticleFlow"/>
+<use name="DataFormats/BeamSpot"/>
+<use name="DataFormats/Candidate"/>
+<use name="DataFormats/Common"/>
+<use name="DataFormats/SiStripCluster"/>
+<use name="DataFormats/GeometryVector"/>
+<use name="DataFormats/GsfTrackReco"/>
+<use name="DataFormats/Math"/>
+<use name="DataFormats/ParticleFlowCandidate"/>
+<use name="DataFormats/ParticleFlowReco"/>
+<use name="DataFormats/TrackReco"/>
+<use name="CommonTools/BaseParticlePropagator"/>
+<use name="FWCore/Framework"/>
+<use name="FWCore/MessageLogger"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/Utilities"/>
+<use name="MagneticField/Engine"/>
+<use name="MagneticField/Records"/>
+<use name="RecoTracker/TkTrackingRegions"/>
+<use name="RecoTracker/TransientTrackingRecHit"/>
+<use name="TrackingTools/PatternTools"/>
+<use name="TrackingTools/Records"/>
+<use name="TrackingTools/TrajectoryParametrization"/>
+<use name="TrackingTools/TrajectoryState"/>
+<!--
+<library file="*.cc" name="RecoLocalTrackerSubCollectionProducersPlugins">
+  <flags EDM_PLUGIN="1"/>
+</library>
+-->
+<library file="alpaka/*.cc" name="RecoLocalTrackerSubCollectionProducersPluginsPortable">
+<use name="alpaka"/>
+<use name="HeterogeneousCore/AlpakaCore"/>
+<use name="HeterogeneousCore/AlpakaInterface"/>
+  <flags ALPAKA_BACKENDS="1"/>
+  <flags EDM_PLUGIN="1"/>
+</library>
