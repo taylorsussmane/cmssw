@@ -30,12 +30,10 @@
 
 #include "DataFormats/SiStripCluster/interface/SiStripHitsSoA.h"
 #include "DataFormats/SiStripCluster/interface/SiStripHitsHostCollection.h"
-#include "DataFormats/SiStripCluster/interface/SiStripHitsDeviceCollection.h"
-#include "DataFormats/SiStripCluster/interface/alpaka/SiStripHitsSoACollection.h"
+#include "DataFormats/SiStripCluster/interface/alpaka/SiStripHitsDeviceCollection.h"
 
 #include "HeterogeneousCore/AlpakaInterface/interface/config.h"
 #include "HeterogeneousCore/AlpakaCore/interface/alpaka/global/EDProducer.h"
-//#include ""
 
 namespace ALPAKA_ACCELERATOR_NAMESPACE {
 
@@ -50,7 +48,7 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 	private:
 		virtual void produce(edm::StreamID sid, device::Event& iEvent, device::EventSetup const& iSetUp) const;
 
-		const device::EDPutToken<SiStripHitsMaskingDevice<Device>> deviceToken_;
+		const device::EDPutToken<SiStripHitsMaskingDevice> deviceToken_;
 		const device::EDGetToken<std::vector<SiStripHitsMaskingSoA>> siStripHitsToken_;
 //		const device::EDPutToken<SiStripHitsMaskingDevice<Device>> deviceToken_;
 //		const device::EDGetToken<SiStripHitsMaskingSoA> siStripToken_; 
@@ -90,9 +88,11 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 			std::cout << viewHostStripHits[i].recHitMask() << std::endl;
 		}	
 
-		SiStripHitsMaskingDevice deviceProductSiStripHits{queue, stripHitsSize};
-		alpaka::memcpy(queue, deviceProductSiStripHits.buffer(), hostProductSiStripHits.buffer());
-		iEvent.emplace(deviceToken_, std::move(deviceProductSiStripHits));
+//		SiStripHitsMaskingDevice deviceProductSiStripHits{queue, stripHitsSize};
+//		alpaka::memcpy(queue, deviceProductSiStripHits.buffer(), hostProductSiStripHits.buffer());
+		iEvent.emplace(deviceToken_, iEvent.queue(), 0);
+
+		
 //old:		edm::Handle<edmNew::DetSetVector<SiPixelCluster>> pixelClusters;	
 //		edm::Handle<edmNew::DetSetVector<Phase2TrackerCluster1D>> phase2OTClusters;
 
