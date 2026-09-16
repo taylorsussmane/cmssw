@@ -1,0 +1,9 @@
+#ifndef DataFormats_Phase2OTHitMaskingSoA_interface_Phase2OTHitMaskingHostCollection_h
+#define DataFormats_Phase2OTHitMaskingSoA_interface_Phase2OTHitMaskingHostCollection_h
+
+#include "DataFormats/Portable/interface/PortableHostCollection.h"
+#include "DataFormats/Phase2OTHitMaskingSoA/interface/Phase2OTHitMaskingSoA.h"
+
+using Phase2OTHitMaskingHost = PortableHostCollection<Phase2OTHitMaskingSoA>;
+
+#endif

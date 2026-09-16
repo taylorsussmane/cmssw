@@ -28,9 +28,9 @@
 
 #include <limits>
 
-#include "DataFormats/SiStripCluster/interface/SiStripHitsSoA.h"
-#include "DataFormats/SiStripCluster/interface/SiStripHitsHostCollection.h"
-#include "DataFormats/SiStripCluster/interface/alpaka/SiStripHitsDeviceCollection.h"
+#include "DataFormats/Phase2OTHitMaskingSoA/interface/Phase2OTHitMaskingSoA.h"
+#include "DataFormats/Phase2OTHitMaskingSoA/interface/Phase2OTHitMaskingHostCollection.h"
+#include "DataFormats/Phase2OTHitMaskingSoA/interface/alpaka/Phase2OTHitMaskingDeviceCollection.h"
 
 #include "HeterogeneousCore/AlpakaInterface/interface/config.h"
 #include "HeterogeneousCore/AlpakaCore/interface/alpaka/global/EDProducer.h"
@@ -48,48 +48,42 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 	private:
 		virtual void produce(edm::StreamID sid, device::Event& iEvent, device::EventSetup const& iSetUp) const;
 
-		const device::EDPutToken<SiStripHitsMaskingDevice> deviceToken_;
-		const device::EDGetToken<std::vector<SiStripHitsMaskingSoA>> siStripHitsToken_;
-//		const device::EDPutToken<SiStripHitsMaskingDevice<Device>> deviceToken_;
-//		const device::EDGetToken<SiStripHitsMaskingSoA> siStripToken_; 
-		// idk if the second one is needed anymore since we're doing rec hits now instead of pixel and strip hits like before
+		const device::EDPutToken<Phase2OTHitMaskingDevice> deviceToken_;
+		const device::EDGetToken<std::vector<Phase2OTHitMaskingSoA>> Phase2OTHitMaskingToken_;
 	};
 
     taylorTrackClusterRemoverPhase2::taylorTrackClusterRemoverPhase2(const edm::ParameterSet& iConfig)
 		: EDProducer(iConfig),
 		  deviceToken_{produces()},
-		  siStripHitsToken_(consumes(iConfig.getParameter<edm::InputTag>("siStripHitsSoA")))//,//,
-//		  produces<edm::ContainerMask<edmNew::DetSetVector<SiPixelCluster>>>
-		 // siStripToken_(consumes(iConfig.getParameter<edm::InputTag>("siStripSoA")))
+		  Phase2OTHitMaskingToken_(consumes(iConfig.getParameter<edm::InputTag>("Phase2OTHitMaskingSoA")))
 	{}
 
     void taylorTrackClusterRemoverPhase2::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 		edm::ParameterSetDescription desc;
-		desc.add<edm::InputTag>("siStripHitsMaskingSoA", edm::InputTag("siStripHitsMaskingSoA"));
-//		desc.add<edm::InputTag>("phase2OTClusters", edm::InputTag("siPhase2Clusters"));
+		desc.add<edm::InputTag>("Phase2OTHitMaskingSoA", edm::InputTag("Phase2OTHitMaskingSoA"));
 		descriptions.addWithDefaultLabel(desc);
 	}
 	
 	void taylorTrackClusterRemoverPhase2::produce(edm::StreamID sid, device::Event& iEvent, device::EventSetup const& iSetUp) const {
 		std::cout<<"TRACK CLUSTER REMOVER"<<std::endl;
 		auto queue = iEvent.queue();
-		const std::vector<SiStripHitsMaskingSoA>& stripHitsColl = iEvent.get(siStripHitsToken_);
-		//const auto& stripColl = iEvent.get(siStripToken_);
+		const std::vector<Phase2OTHitMaskingSoA>& hitsColl = iEvent.get(Phase2OTHitMaskingToken_);
 	
-		int32_t stripHitsSize = stripHitsColl.size();
+		int32_t hitsSize = hitsColl.size();
 
-		SiStripHitsMaskingHost hostProductSiStripHits{queue, stripHitsSize};
-		auto& viewHostStripHits = hostProductSiStripHits.view();
+		Phase2OTHitMaskingHost hostProductPhase2OTHitMasking{queue, hitsSize};
+		auto& viewHostHits = hostProductPhase2OTHitMasking.view();
 
 		std::cout<<"Si pixel cluster IDs:"<<std::endl;
 		int32_t i = 0;
-		for (auto& stripHit : stripHitsColl){
-			viewHostStripHits[i].recHitMask() = i % 2;
-			std::cout << viewHostStripHits[i].recHitMask() << std::endl;
+		for (auto& hit : hitsColl){
+			viewHostHits[i].recHitMask() = i % 2;
+			std::cout << viewHostHits[i].recHitMask() << std::endl;
+			i++;
 		}	
 
-//		SiStripHitsMaskingDevice deviceProductSiStripHits{queue, stripHitsSize};
-//		alpaka::memcpy(queue, deviceProductSiStripHits.buffer(), hostProductSiStripHits.buffer());
+//		Phase2OTHitMaskingDevice deviceProductPhase2OTHitMasking{queue, hitsSize};
+//		alpaka::memcpy(queue, deviceProductPhase2OTHitMasking.buffer(), hostProductPhase2OTHitMasking.buffer());
 		iEvent.emplace(deviceToken_, iEvent.queue(), 0);
 
 		
