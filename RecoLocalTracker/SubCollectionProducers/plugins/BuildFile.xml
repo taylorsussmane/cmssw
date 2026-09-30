@@ -33,7 +33,7 @@
   <use name="alpaka"/>
   <use name="HeterogeneousCore/AlpakaCore"/>
   <use name="HeterogeneousCore/AlpakaInterface"/>
-  <use name="RecoLocalTracker/SubCollectionProducers"/>
+<!--  <use name="RecoLocalTracker/SubCollectionProducers"/>-->
   <flags ALPAKA_BACKENDS="1"/>
   <flags EDM_PLUGIN="1"/>
 </library>
