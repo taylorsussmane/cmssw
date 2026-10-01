@@ -21,7 +21,7 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackerRecHit2D/interface/ClusterRemovalInfo.h"
 #include "DataFormats/TrackerRecHit2D/interface/VectorHit.h"
-#include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2DCollection.h"
+#include "DataFormats/TrackerRecHit2D/interface/SiStripMatchedRecHit2D.h"
 
 #include "TrackingTools/PatternTools/interface/TrackCollectionTokens.h"
 
@@ -51,18 +51,20 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 
 		const device::EDPutToken<Phase2OTHitMaskingDevice> deviceToken_;
 		const device::EDGetToken<std::vector<Phase2OTHitMaskingSoA>> Phase2OTHitMaskingToken_;
-		edm::EDGetTokenT<SiStripRecHit2DCollection> RecHitToken_;
+		const edm::EDGetTokenT<SiStripMatchedRecHit2D> RecHitToken_;
 	};
 
     taylorTrackClusterRemoverPhase2::taylorTrackClusterRemoverPhase2(const edm::ParameterSet& iConfig)
 		: EDProducer(iConfig),
 		  deviceToken_{produces()},
-		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("SiStripMatchedRecHit2DCollection")))
-	{}
+		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("SiStripMatchedRecHit2D")))
+	{
+//		produces<edm::ContainerMask<edmNew::DetSetVector<HitMask>>>();
+	}
 
     void taylorTrackClusterRemoverPhase2::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 		edm::ParameterSetDescription desc;
-		desc.add<edm::InputTag>("SiStripRecHit2DCollection", edm::InputTag("SiStripRecHit2DCollection"));
+		desc.add<edm::InputTag>("RecHits", edm::InputTag("SiStripMatchedRecHit2D"));
 		descriptions.addWithDefaultLabel(desc);
 	}
 	
