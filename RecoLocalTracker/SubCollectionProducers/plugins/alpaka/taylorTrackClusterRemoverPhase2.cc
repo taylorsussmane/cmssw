@@ -64,7 +64,7 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 
     void taylorTrackClusterRemoverPhase2::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 		edm::ParameterSetDescription desc;
-		desc.add<edm::InputTag>("RecHits", edm::InputTag("SiStripMatchedRecHit2D"));
+		desc.add<edm::InputTag>("SiStripMatchedRecHit2D", edm::InputTag("SiStripMatchedRecHit2D"));
 		descriptions.addWithDefaultLabel(desc);
 	}
 	

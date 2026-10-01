@@ -1,8 +1,12 @@
 <lcgdict>
 
 <class name="Phase2OTHitMaskingHost::Layout"/>
+<!--<class name="Phase2OTHitMaskingSoA"/>
+<class name="Phase2OTHitMaskingSoA::View"/>
+<class name="Phase2OTHitMaskingSoA::ConstView"/>-->
 <class name="Phase2OTHitMaskingLayout<128,false>"/>
 <class name="Phase2OTHitMaskingHost" rntupleStreamerMode="true"/>
 <class name="edm::Wrapper<Phase2OTHitMaskingHost>" splitLevel="0"/>
+<class name="edm::Wrapper<SiStripMatchedRecHit2D>"/>
 
 </lcgdict>
