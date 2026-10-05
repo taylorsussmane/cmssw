@@ -22,6 +22,7 @@
 #include "DataFormats/TrackerRecHit2D/interface/ClusterRemovalInfo.h"
 #include "DataFormats/TrackerRecHit2D/interface/VectorHit.h"
 #include "DataFormats/TrackerRecHit2D/interface/SiStripMatchedRecHit2D.h"
+#include "DataFormats/TrackerRecHit2D/interface/SiStripMatchedRecHit2DCollection.h"
 
 #include "TrackingTools/PatternTools/interface/TrackCollectionTokens.h"
 
@@ -50,13 +51,14 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 		virtual void produce(edm::StreamID sid, device::Event& iEvent, device::EventSetup const& iSetUp) const;
 
 		const device::EDPutToken<Phase2OTHitMaskingDevice> deviceToken_;
-		const device::EDGetToken<std::vector<Phase2OTHitMaskingSoA>> Phase2OTHitMaskingToken_;
-		const edm::EDGetTokenT<SiStripMatchedRecHit2D> RecHitToken_;
+//		const device::EDGetToken<std::vector<Phase2OTHitMaskingSoA>> Phase2OTHitMaskingToken_;
+		const edm::EDGetTokenT<SiStripMatchedRecHit2DCollection> RecHitToken_;
 	};
 
     taylorTrackClusterRemoverPhase2::taylorTrackClusterRemoverPhase2(const edm::ParameterSet& iConfig)
 		: EDProducer(iConfig),
 		  deviceToken_{produces()},
+//		  Phase2OTHitMaskingToken_(consumes(iConfig.getParameter<edm::InputTag>("Phase2OTHitMask    ingSoA"))),
 		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("SiStripMatchedRecHit2D")))
 	{
 //		produces<edm::ContainerMask<edmNew::DetSetVector<HitMask>>>();
@@ -71,7 +73,7 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 	void taylorTrackClusterRemoverPhase2::produce(edm::StreamID sid, device::Event& iEvent, device::EventSetup const& iSetUp) const {
 		std::cout<<"TRACK CLUSTER REMOVER"<<std::endl;
 		auto queue = iEvent.queue();
-		const std::vector<Phase2OTHitMaskingSoA>& hitsColl = iEvent.get(Phase2OTHitMaskingToken_);
+		const edmNew::DetSetVector<SiStripMatchedRecHit2D>& hitsColl = iEvent.get(RecHitToken_);
 	
 		int32_t hitsSize = hitsColl.size();
 
@@ -79,11 +81,11 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 		auto& viewHostHits = hostProductPhase2OTHitMasking.view();
 
 		std::cout<<"Si pixel cluster IDs:"<<std::endl;
-		int32_t i = 0;
-		for (auto& hit : hitsColl){
+//		int32_t i = 0;
+		for (int i = 0; i < hitsSize; i++){
 			viewHostHits[i].recHitMask() = i % 2;
 			std::cout << viewHostHits[i].recHitMask() << std::endl;
-			i++;
+//			i++;
 		}	
 
 //		Phase2OTHitMaskingDevice deviceProductPhase2OTHitMasking{queue, hitsSize};
