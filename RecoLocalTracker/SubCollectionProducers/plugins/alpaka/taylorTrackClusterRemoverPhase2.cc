@@ -52,20 +52,22 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 
 		const device::EDPutToken<Phase2OTHitMaskingDevice> deviceToken_;
 //		const edm::EDGetTokenT<SiStripMatchedRecHit2DCollection> RecHitToken_;
-		const edm::EDGetTokenT<TrackingRecHitCollection> RecHitToken_;
+		const edm::EDGetTokenT<reco::TrackingRecHitsSoACollection> RecHitToken_;
 	};
 
     taylorTrackClusterRemoverPhase2::taylorTrackClusterRemoverPhase2(const edm::ParameterSet& iConfig)
 		: EDProducer(iConfig),
 		  deviceToken_{produces()},
-		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("RecHits")))
+		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("pixelRecHitSoASource")))
+//		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("RecHits")))
 	{
 //		produces<edm::ContainerMask<edmNew::DetSetVector<HitMask>>>();
 	}
 
     void taylorTrackClusterRemoverPhase2::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 		edm::ParameterSetDescription desc;
-		desc.add<edm::InputTag>("RecHits", edm::InputTag("conversionStepTracks"));
+		desc.add<edm::InputTag>("pixelRecHitSoASource", edm::InputTag("siPixelRecHitsPreSplittingAlpaka"));
+//		desc.add<edm::InputTag>("RecHits", edm::InputTag("conversionStepTracks"));
 		descriptions.addWithDefaultLabel(desc);
 	}
 	
