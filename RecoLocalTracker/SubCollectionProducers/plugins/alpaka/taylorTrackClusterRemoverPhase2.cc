@@ -21,8 +21,7 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackerRecHit2D/interface/ClusterRemovalInfo.h"
 #include "DataFormats/TrackerRecHit2D/interface/VectorHit.h"
-#include "DataFormats/TrackerRecHit2D/interface/SiStripMatchedRecHit2D.h"
-#include "DataFormats/TrackerRecHit2D/interface/SiStripMatchedRecHit2DCollection.h"
+#include "DataFormats/TrackingRecHitSoA/interface/alpaka/TrackingRecHitsSoACollection.h"
 
 #include "TrackingTools/PatternTools/interface/TrackCollectionTokens.h"
 
@@ -51,7 +50,6 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 		virtual void produce(edm::StreamID sid, device::Event& iEvent, device::EventSetup const& iSetUp) const;
 
 		const device::EDPutToken<Phase2OTHitMaskingDevice> deviceToken_;
-//		const edm::EDGetTokenT<SiStripMatchedRecHit2DCollection> RecHitToken_;
 		const edm::EDGetTokenT<reco::TrackingRecHitsSoACollection> RecHitToken_;
 	};
 
@@ -59,7 +57,6 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 		: EDProducer(iConfig),
 		  deviceToken_{produces()},
 		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("pixelRecHitSoASource")))
-//		  RecHitToken_(consumes(iConfig.getParameter<edm::InputTag>("RecHits")))
 	{
 //		produces<edm::ContainerMask<edmNew::DetSetVector<HitMask>>>();
 	}
@@ -67,7 +64,6 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
     void taylorTrackClusterRemoverPhase2::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 		edm::ParameterSetDescription desc;
 		desc.add<edm::InputTag>("pixelRecHitSoASource", edm::InputTag("siPixelRecHitsPreSplittingAlpaka"));
-//		desc.add<edm::InputTag>("RecHits", edm::InputTag("conversionStepTracks"));
 		descriptions.addWithDefaultLabel(desc);
 	}
 	
@@ -75,20 +71,16 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 		std::cout<<"TRACK CLUSTER REMOVER"<<std::endl;
 		auto queue = iEvent.queue();
 		const auto& hitsColl = iEvent.get(RecHitToken_);
-//		const SiStripMatchedRecHit2DCollection& hitsColl = iEvent.get(RecHitToken_);
-//		const edmNew::DetSetVector<SiStripMatchedRecHit2D>& hitsColl = iEvent.get(RecHitToken_);
 	
-		int32_t hitsSize = hitsColl.size();
+		int32_t hitsSize = hitsColl.size().size(); // hitsColl.size() is an array for a reason I don't understand
 
 		Phase2OTHitMaskingHost hostProductPhase2OTHitMasking{queue, hitsSize};
 		auto& viewHostHits = hostProductPhase2OTHitMasking.view();
 
 		std::cout<<"Si pixel cluster IDs:"<<std::endl;
-//		int32_t i = 0;
 		for (int i = 0; i < hitsSize; i++){
 			viewHostHits[i].recHitMask() = i % 2;
 			std::cout << viewHostHits[i].recHitMask() << std::endl;
-//			i++;
 		}	
 
 		Phase2OTHitMaskingDevice deviceProductPhase2OTHitMasking{queue, hitsSize};
