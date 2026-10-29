@@ -22,6 +22,7 @@
 #include "DataFormats/TrackerRecHit2D/interface/ClusterRemovalInfo.h"
 #include "DataFormats/TrackerRecHit2D/interface/VectorHit.h"
 #include "DataFormats/TrackingRecHitSoA/interface/alpaka/TrackingRecHitsSoACollection.h"
+#include "DataFormats/TrackingRecHitSoA/interface/TrackingRecHitsHost.h"
 
 #include "TrackingTools/PatternTools/interface/TrackCollectionTokens.h"
 
@@ -50,7 +51,8 @@ namespace ALPAKA_ACCELERATOR_NAMESPACE {
 		virtual void produce(edm::StreamID sid, device::Event& iEvent, device::EventSetup const& iSetUp) const;
 
 		const device::EDPutToken<Phase2OTHitMaskingDevice> deviceToken_;
-		const edm::EDGetTokenT<reco::TrackingRecHitsSoACollection> RecHitToken_;
+		const edm::EDGetTokenT<::reco::TrackingRecHitHost> RecHitToken_;
+//		const edm::EDGetTokenT<reco::TrackingRecHitsSoACollection> RecHitToken_;
 	};
 
     taylorTrackClusterRemoverPhase2::taylorTrackClusterRemoverPhase2(const edm::ParameterSet& iConfig)
